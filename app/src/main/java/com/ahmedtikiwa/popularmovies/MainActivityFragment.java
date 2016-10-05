@@ -36,8 +36,10 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // if no bundle exists in the savedInstanceState then a new array will be created
         if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIES_PARCEL)) {
             movieArrayList = new ArrayList<Movie>();
+        // use the data from the savedInstanceState
         } else {
             movieArrayList = savedInstanceState.getParcelableArrayList(MOVIES_PARCEL);
         }
@@ -64,6 +66,9 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Fetches the movie list data from the server
+     */
     public void loadMovies() {
         Call<MoviesResponse> call = TmdbApi.getTmdbApiClient().popularMovies(BuildConfig.TMDB_API_KEY);
         call.enqueue(new Callback<MoviesResponse>() {

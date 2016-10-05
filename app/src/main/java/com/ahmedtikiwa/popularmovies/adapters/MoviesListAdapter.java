@@ -36,8 +36,10 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        // assign the Movie object to the item position
         Movie movie = getItem(position);
 
+        // inflate the layout if the view is null
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movies_list_item, parent, false);
         }
@@ -45,6 +47,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
         viewHolder = new ViewHolder(convertView);
         viewHolder.poster = (ImageView)convertView.findViewById(R.id.poster_image);
 
+        // load the poster image into the imageview if the server returns the value
         if (movie.getPosterPath() != null) {
             String posterUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_RECOMMENDED_SIZE + movie.getPosterPath();
             convertView.setTag(posterUrl);
