@@ -8,7 +8,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Ahmed on 2016/10/05.
@@ -43,11 +43,11 @@ public class TmdbApi {
     }
 
     public interface TmdbApiInterface {
-        @GET("movie/popular/{api_key}")
-        Call<MoviesResponse> popularMovies(@Path("api_key") String apiKey);
+        @GET("movie/popular/")
+        Call<MoviesResponse> popularMovies(@Query("api_key") String apiKey);
 
-        @GET("/movie/top_rated/{api_key}")
-        Call<MoviesResponse> topRatedMovies(@Path("api_key") String apiKey);
+        @GET("/movie/top_rated/")
+        Call<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey);
     }
 
 }

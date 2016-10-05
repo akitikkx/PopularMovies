@@ -5,14 +5,13 @@ package com.ahmedtikiwa.popularmovies.models;
  */
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MoviesResponse {
 
     private Integer page;
-    private List<Movie> results = new ArrayList<Movie>();
-    private Integer totalResults;
-    private Integer totalPages;
+    private ArrayList<Movie> results = new ArrayList<Movie>();
+    private Integer total_results;
+    private Integer total_pages;
 
     /**
      * @return The page
@@ -31,14 +30,14 @@ public class MoviesResponse {
     /**
      * @return The results
      */
-    public List<Movie> getResults() {
+    public ArrayList<Movie> getResults() {
         return results;
     }
 
     /**
      * @param results The results
      */
-    public void setResults(List<Movie> results) {
+    public void setResults(ArrayList<Movie> results) {
         this.results = results;
     }
 
@@ -46,28 +45,28 @@ public class MoviesResponse {
      * @return The totalResults
      */
     public Integer getTotalResults() {
-        return totalResults;
+        return total_results;
     }
 
     /**
-     * @param totalResults The total_results
+     * @param total_results The total_results
      */
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
+    public void setTotalResults(Integer total_results) {
+        this.total_results = total_results;
     }
 
     /**
-     * @return The totalPages
+     * @return The total_pages
      */
     public Integer getTotalPages() {
-        return totalPages;
+        return total_pages;
     }
 
     /**
      * @param totalPages The total_pages
      */
     public void setTotalPages(Integer totalPages) {
-        this.totalPages = totalPages;
+        this.total_pages = total_pages;
     }
 
 }
