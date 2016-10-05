@@ -5,8 +5,8 @@
 
     <ImageView
         android:id="@+id/poster_image"
-        android:layout_width="185dp"
-        android:layout_height="250dp"
+        android:layout_width="@dimen/list_poster_width"
+        android:layout_height="@dimen/list_poster_height"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_image_black_24dp" />
 

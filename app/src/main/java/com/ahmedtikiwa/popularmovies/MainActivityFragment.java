@@ -74,8 +74,6 @@ public class MainActivityFragment extends Fragment {
                     movieArrayList = moviesResponse.getResults();
                     adapter.notifyDataSetChanged();
 
-                    Log.d(LOG_TAG, String.valueOf(moviesResponse.getResults()));
-
                 } else {
                     Log.d(LOG_TAG, "Response was not successful: " + String.valueOf(response.errorBody()));
                 }

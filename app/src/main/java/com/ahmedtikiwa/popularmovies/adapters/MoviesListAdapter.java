@@ -1,7 +1,6 @@
 package com.ahmedtikiwa.popularmovies.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.ahmedtikiwa.popularmovies.utils.Constants;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-
-import static com.ahmedtikiwa.popularmovies.MainActivityFragment.LOG_TAG;
 
 /**
  * Created by Ahmed on 2016/10/03.
@@ -56,10 +53,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
                     .load(posterUrl)
                     .error(R.drawable.ic_image_black_24dp)
                     .into(viewHolder.poster);
-            Log.d(LOG_TAG, posterUrl);
         }
-
-
 
         return convertView;
     }
