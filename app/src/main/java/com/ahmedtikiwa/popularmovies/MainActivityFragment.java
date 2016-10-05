@@ -31,11 +31,13 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void loadMovies() {
-        Call<MoviesResponse> call = TmdbApi.getTmdbApiClient().popularMovies("");
+        Call<MoviesResponse> call = TmdbApi.getTmdbApiClient().popularMovies(BuildConfig.TMDB_API_KEY);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.isSuccessful()) {
 
+                }
             }
 
             @Override
