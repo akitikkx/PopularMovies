@@ -1,4 +1,4 @@
-package com.ahmedtikiwa.popularmovies;
+package com.ahmedtikiwa.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
+import com.ahmedtikiwa.popularmovies.BuildConfig;
+import com.ahmedtikiwa.popularmovies.R;
 import com.ahmedtikiwa.popularmovies.adapters.MoviesListAdapter;
 import com.ahmedtikiwa.popularmovies.api.TmdbApi;
 import com.ahmedtikiwa.popularmovies.models.Movie;

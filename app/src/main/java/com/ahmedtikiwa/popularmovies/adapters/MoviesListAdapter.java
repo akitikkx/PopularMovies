@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-import static com.ahmedtikiwa.popularmovies.MainActivityFragment.LOG_TAG;
+import static com.ahmedtikiwa.popularmovies.fragments.MainActivityFragment.LOG_TAG;
 
 /**
  * Created by Ahmed on 2016/10/03.
