@@ -46,7 +46,7 @@ public class TmdbApi {
         @GET("movie/popular/")
         Call<MoviesResponse> popularMovies(@Query("api_key") String apiKey);
 
-        @GET("/movie/top_rated/")
+        @GET("movie/top_rated/")
         Call<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey);
     }
 
