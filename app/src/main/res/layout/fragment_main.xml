@@ -15,8 +15,17 @@
         android:columnWidth="@dimen/gridview_column_width"
         android:gravity="center"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth">
-
+        android:stretchMode="columnWidth"
+        android:visibility="gone">
     </GridView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:visibility="visible" />
 
 </RelativeLayout>

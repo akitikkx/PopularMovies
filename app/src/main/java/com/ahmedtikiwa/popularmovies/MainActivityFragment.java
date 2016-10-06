@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.ahmedtikiwa.popularmovies.adapters.MoviesListAdapter;
 import com.ahmedtikiwa.popularmovies.api.TmdbApi;
@@ -29,6 +30,7 @@ public class MainActivityFragment extends Fragment {
     private static final String MOVIES_PARCEL = "movies";
     private MoviesListAdapter adapter;
     private GridView mGridView;
+    private ProgressBar progressBar;
 
     public MainActivityFragment() {
     }
@@ -57,6 +59,7 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         adapter = new MoviesListAdapter(getActivity(), 0, movieArrayList);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         mGridView = (GridView) rootView.findViewById(R.id.gridview);
         mGridView.setAdapter(adapter);
@@ -70,6 +73,8 @@ public class MainActivityFragment extends Fragment {
      * Fetches the movie list data from the server
      */
     public void loadMovies() {
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+
         Call<MoviesResponse> call = TmdbApi.getTmdbApiClient().popularMovies(BuildConfig.TMDB_API_KEY);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -81,12 +86,14 @@ public class MainActivityFragment extends Fragment {
                     updateData(movies);
 
                 } else {
+                    progressBar.setVisibility(ProgressBar.GONE);
                     Log.d(LOG_TAG, "Response was not successful: " + String.valueOf(response.errorBody()));
                 }
             }
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                progressBar.setVisibility(ProgressBar.GONE);
                 Log.d(LOG_TAG, t.getMessage());
             }
         });
@@ -96,7 +103,11 @@ public class MainActivityFragment extends Fragment {
         if (arrayList != null) {
             movieArrayList.clear();
             movieArrayList.addAll(arrayList);
+
             adapter.notifyDataSetChanged();
+
+            mGridView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(ProgressBar.GONE);
         }
     }
 }
