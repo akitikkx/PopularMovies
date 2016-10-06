@@ -76,8 +76,9 @@ public class MainActivityFragment extends Fragment {
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 if (response.isSuccessful()) {
                     MoviesResponse moviesResponse = response.body();
-                    movieArrayList = moviesResponse.getResults();
-                    adapter.notifyDataSetChanged();
+                    ArrayList movies = moviesResponse.getResults();
+
+                    updateData(movies);
 
                 } else {
                     Log.d(LOG_TAG, "Response was not successful: " + String.valueOf(response.errorBody()));
@@ -89,5 +90,13 @@ public class MainActivityFragment extends Fragment {
                 Log.d(LOG_TAG, t.getMessage());
             }
         });
+    }
+
+    private void updateData(ArrayList arrayList) {
+        if (arrayList != null) {
+            movieArrayList.clear();
+            movieArrayList.addAll(arrayList);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
