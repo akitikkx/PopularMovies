@@ -1,7 +1,8 @@
 package com.ahmedtikiwa.popularmovies.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.ahmedtikiwa.popularmovies.R;
+import com.ahmedtikiwa.popularmovies.activities.MovieDetailActivity;
 import com.ahmedtikiwa.popularmovies.models.Movie;
 import com.ahmedtikiwa.popularmovies.utils.Constants;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-
-import static com.ahmedtikiwa.popularmovies.fragments.MainActivityFragment.LOG_TAG;
 
 /**
  * Created by Ahmed on 2016/10/03.
@@ -37,7 +37,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         // assign the Movie object to the item position
         Movie movie = getItem(position);
@@ -59,9 +59,20 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
                     .load(posterUrl)
                     .error(R.drawable.ic_image_black_24dp)
                     .into(viewHolder.poster);
-
-            Log.d(LOG_TAG, posterUrl);
         }
+
+        // handle the onclick of the movie poster from the gridview
+        viewHolder.poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(mContext.getString(R.string.movies_parcel), data.get(position));
+
+                Intent viewMovieDetails = new Intent(mContext, MovieDetailActivity.class);
+                viewMovieDetails.putExtras(bundle);
+                mContext.startActivity(viewMovieDetails);
+            }
+        });
 
         return convertView;
     }
