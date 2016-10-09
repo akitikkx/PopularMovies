@@ -1,8 +1,16 @@
 package com.ahmedtikiwa.popularmovies.api;
 
+import com.ahmedtikiwa.popularmovies.App;
 import com.ahmedtikiwa.popularmovies.models.MoviesResponse;
 
+import java.io.File;
+import java.io.IOException;
+
+import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -26,10 +34,31 @@ public class TmdbApi {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+            Interceptor interceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    if (App.hasNetworkConnection()) {
+                        int maxAge = 60 * 5; // read from cache for 5 minute
+                        request = request.newBuilder().header("Cache-Control", "public, max-age=" + maxAge).build();
+                    } else {
+                        int maxStale = 60 * 60; // 1 hour
+                        request = request.newBuilder().header("Cache-Control", "public, max-age=" + maxStale).build();
+
+                    }
+                    return chain.proceed(request);
+                }
+            };
+
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            File httpCacheDirectory = new File(App.getContext().getCacheDir(), "responses");
+            httpClient.cache(new Cache(httpCacheDirectory, 10 * 1024 * 1024));
 
             // add the logging interceptor to the call
             httpClient.addInterceptor(loggingInterceptor);
+
+            // add cache interceptor
+            httpClient.addInterceptor(interceptor);
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

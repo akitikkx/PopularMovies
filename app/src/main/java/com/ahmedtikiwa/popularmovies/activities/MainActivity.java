@@ -2,21 +2,39 @@ package com.ahmedtikiwa.popularmovies.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ahmedtikiwa.popularmovies.App;
 import com.ahmedtikiwa.popularmovies.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    private CoordinatorLayout coordinatorLayout;
+    private App app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        app = (App) getApplication();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
+
+        // check if the device is connected to the internet
+        checkNetworkConnection(coordinatorLayout);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkNetworkConnection(coordinatorLayout);
     }
 
     @Override

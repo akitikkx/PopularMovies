@@ -40,7 +40,7 @@ public class MoviesListAdapter extends ArrayAdapter<Movie> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         // assign the Movie object to the item position
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
 
         // inflate the layout if the view is null
         if (convertView == null) {

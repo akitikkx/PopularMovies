@@ -11,11 +11,22 @@
     <string name="pref_sort_order_key">sort_order</string>
     <string name="pref_sort_order_title">Sort Order</string>
 
-    <!-- Movies -->
+    <!-- Movies List -->
     <string name="title_movie_list">Movies</string>
-    <string name="title_movie_detail">Movie Detail</string>
     <string name="movies_parcel">movies</string>
+    <string name="no_movies_to_display_header">There are no movies to display yet</string>
+    <string name="snackbar_no_internet_action_title">Settings</string>
+
+    <!-- Movie detail -->
+    <string name="title_movie_detail">Movie Detail</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="plot_synopsis">Movie synopsis is currently not provided</string>
+    <string name="release_date_heading">Release Date</string>
+    <string name="vote_average_heading">Vote Average</string>
+    <string name="vote_average">%1$x/10</string>
+
+    <!-- General -->
+    <string name="no_internet_connection">You currently do not have an internet connection</string>
+    <string name="no_movies_to_display">Once the movies are available they will be displayed here</string>
 
 </resources>

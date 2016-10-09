@@ -22,7 +22,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
     private static final String MOVIE_PARCEL = "movie";
     private Movie movie;
     private ImageView movieBackdrop, moviePoster;
-    private TextView plotSynopsis;
+    private TextView plotSynopsis, releaseDate, voteAverage;
 
     public MovieDetailFragment() {
     }
@@ -63,9 +63,12 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
 
             // setup the plot synopsis
             plotSynopsis.setText(movie.getOverview());
-
             // setup the movie poster
             Glide.with(getContext()).load(posterUrl).into(moviePoster);
+            // setup the movie release date
+            releaseDate.setText(movie.getReleaseDate());
+            // setup the vote average
+            voteAverage.setText(String.format(getString(R.string.vote_average), movie.getVoteAverage()));
         }
 
         return rootView;
@@ -75,5 +78,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
         movieBackdrop = (ImageView) rootView.findViewById(R.id.movie_backdrop);
         plotSynopsis = (TextView) rootView.findViewById(R.id.plot_synopsis);
         moviePoster = (ImageView) rootView.findViewById(R.id.movie_poster);
+        releaseDate = (TextView) rootView.findViewById(R.id.movie_release_date);
+        voteAverage = (TextView) rootView.findViewById(R.id.movie_vote_average);
     }
 }
