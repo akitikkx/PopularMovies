@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 public class MovieDetailFragment extends android.support.v4.app.Fragment {
 
     private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+    private static final String MOVIE_PARCEL = "movie";
     private Movie movie;
     private ImageView movieBackdrop, moviePoster;
     private TextView plotSynopsis;
@@ -30,11 +31,21 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getActivity().getIntent();
-        if (intent != null) {
-            movie = intent.getParcelableExtra(getString(R.string.movies_parcel));
-            getActivity().setTitle(movie.getTitle());
+        if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIE_PARCEL)) {
+            Intent intent = getActivity().getIntent();
+            if (intent != null) {
+                movie = intent.getParcelableExtra(getString(R.string.movies_parcel));
+            }
+        } else {
+            movie = savedInstanceState.getParcelable(MOVIE_PARCEL);
         }
+        getActivity().setTitle(movie.getTitle());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(MOVIE_PARCEL, movie);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -46,11 +57,15 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
 
         if (movie != null) {
             // setup the backdrop
-            String posterUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_BACKDROP_SIZE + movie.getBackdropPath();
-            Glide.with(getContext()).load(posterUrl).into(movieBackdrop);
+            String backdropUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_BACKDROP_SIZE + movie.getBackdropPath();
+            String posterUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_RECOMMENDED_SIZE + movie.getPosterPath();
+            Glide.with(getContext()).load(backdropUrl).into(movieBackdrop);
 
             // setup the plot synopsis
             plotSynopsis.setText(movie.getOverview());
+
+            // setup the movie poster
+            Glide.with(getContext()).load(posterUrl).into(moviePoster);
         }
 
         return rootView;
@@ -59,5 +74,6 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
     private void setupUIElements(View rootView) {
         movieBackdrop = (ImageView) rootView.findViewById(R.id.movie_backdrop);
         plotSynopsis = (TextView) rootView.findViewById(R.id.plot_synopsis);
+        moviePoster = (ImageView) rootView.findViewById(R.id.movie_poster);
     }
 }

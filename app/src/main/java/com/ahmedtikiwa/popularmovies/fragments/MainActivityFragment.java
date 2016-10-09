@@ -118,7 +118,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progressBar.setVisibility(ProgressBar.GONE);
-                Log.d(LOG_TAG, t.getMessage());
+                Log.d(LOG_TAG, String.valueOf(t.getMessage()));
             }
         });
     }

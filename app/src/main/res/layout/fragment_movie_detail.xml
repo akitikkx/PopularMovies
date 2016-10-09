@@ -24,6 +24,18 @@
             android:padding="@dimen/content_padding"
             android:text="@string/plot_synopsis" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/content_padding">
+
+            <ImageView
+                android:id="@+id/movie_poster"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>
