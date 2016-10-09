@@ -44,7 +44,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
         } else {
             movie = savedInstanceState.getParcelable(MOVIE_PARCEL);
         }
-        getActivity().setTitle(movie.getTitle());
+        getActivity().setTitle(movie.getOriginalTitle());
     }
 
     @Override
