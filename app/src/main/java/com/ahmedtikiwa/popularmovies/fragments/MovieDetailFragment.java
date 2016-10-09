@@ -6,12 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ahmedtikiwa.popularmovies.R;
 import com.ahmedtikiwa.popularmovies.models.Movie;
 import com.ahmedtikiwa.popularmovies.utils.Constants;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -23,6 +27,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
     private Movie movie;
     private ImageView movieBackdrop, moviePoster;
     private TextView plotSynopsis, releaseDate, voteAverage;
+    private ProgressBar backdropProgress, posterProgress;
 
     public MovieDetailFragment() {
     }
@@ -56,22 +61,54 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
         setupUIElements(rootView);
 
         if (movie != null) {
-            // setup the backdrop
-            String backdropUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_BACKDROP_SIZE + movie.getBackdropPath();
-            String posterUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_RECOMMENDED_SIZE + movie.getPosterPath();
-            Glide.with(getContext()).load(backdropUrl).into(movieBackdrop);
-
-            // setup the plot synopsis
-            plotSynopsis.setText(movie.getOverview());
-            // setup the movie poster
-            Glide.with(getContext()).load(posterUrl).into(moviePoster);
-            // setup the movie release date
-            releaseDate.setText(movie.getReleaseDate());
-            // setup the vote average
-            voteAverage.setText(String.format(getString(R.string.vote_average), movie.getVoteAverage()));
+            loadDetail();
         }
 
         return rootView;
+    }
+
+    private void loadDetail() {
+        // setup the backdrop
+        String backdropUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_BACKDROP_SIZE + movie.getBackdropPath();
+        String posterUrl = Constants.TMDB_IMAGE_BASE_URL + Constants.TMDB_IMAGE_RECOMMENDED_SIZE + movie.getPosterPath();
+        Glide.with(getContext())
+                .load(backdropUrl)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        backdropProgress.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(movieBackdrop);
+
+        // setup the plot synopsis
+        plotSynopsis.setText(movie.getOverview());
+        // setup the movie poster
+        Glide.with(getContext())
+                .load(posterUrl)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        posterProgress.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(moviePoster);
+        // setup the movie release date
+        releaseDate.setText(movie.getReleaseDate());
+        // setup the vote average
+        voteAverage.setText(String.format(getString(R.string.vote_average), movie.getVoteAverage()));
     }
 
     private void setupUIElements(View rootView) {
@@ -80,5 +117,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment {
         moviePoster = (ImageView) rootView.findViewById(R.id.movie_poster);
         releaseDate = (TextView) rootView.findViewById(R.id.movie_release_date);
         voteAverage = (TextView) rootView.findViewById(R.id.movie_vote_average);
+        backdropProgress = (ProgressBar)rootView.findViewById(R.id.backdrop_progress);
+        posterProgress = (ProgressBar)rootView.findViewById(R.id.poster_progress);
     }
 }

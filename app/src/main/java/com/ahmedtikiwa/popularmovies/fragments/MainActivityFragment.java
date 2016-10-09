@@ -87,7 +87,6 @@ public class MainActivityFragment extends Fragment {
         // while processing, display the progressbar and hide the gridview
         // until its populated
         progressBar.setVisibility(ProgressBar.VISIBLE);
-        emptyStateLayer.setVisibility(View.GONE);
         mGridView.setVisibility(View.GONE);
 
         String sortOrderPreference = sharedPrefs.getString(getString(R.string.pref_sort_order_key), getString(R.string.pref_default_movies_sort_order));

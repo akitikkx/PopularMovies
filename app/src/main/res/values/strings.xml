@@ -23,7 +23,7 @@
     <string name="plot_synopsis">Movie synopsis is currently not provided</string>
     <string name="release_date_heading">Release Date</string>
     <string name="vote_average_heading">Vote Average</string>
-    <string name="vote_average">%1$x/10</string>
+    <string name="vote_average">%1$s/10</string>
 
     <!-- General -->
     <string name="no_internet_connection">You currently do not have an internet connection</string>

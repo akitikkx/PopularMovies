@@ -25,7 +25,7 @@ public class Movie implements Parcelable {
     private Double popularity;
     private Integer vote_count;
     private Boolean video;
-    private Double vote_average;
+    private String vote_average;
 
     protected Movie(Parcel in) {
         poster_path = in.readString();
@@ -35,6 +35,7 @@ public class Movie implements Parcelable {
         original_language = in.readString();
         title = in.readString();
         backdrop_path = in.readString();
+        vote_average = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -234,15 +235,15 @@ public class Movie implements Parcelable {
     /**
      * @return The voteAverage
      */
-    public Double getVoteAverage() {
-        return vote_average;
+    public String getVoteAverage() {
+        return String.valueOf(vote_average);
     }
 
     /**
-     * @param voteAverage The vote_average
+     * @param vote_average The vote_average
      */
-    public void setVoteAverage(Double voteAverage) {
-        this.vote_average = voteAverage;
+    public void setVoteAverage(String vote_average) {
+        this.vote_average = vote_average;
     }
 
     @Override
@@ -259,5 +260,6 @@ public class Movie implements Parcelable {
         parcel.writeString(original_language);
         parcel.writeString(title);
         parcel.writeString(backdrop_path);
+        parcel.writeString(vote_average);
     }
 }
