@@ -2,6 +2,7 @@ package com.ahmedtikiwa.popularmovies.fragments;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.StaleDataException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -178,13 +179,15 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
         );
 
         // if the movie is a favorite also set the star to on
-        if (movieCursor.moveToNext()) {
+        if (movieCursor != null && movieCursor.moveToNext()) {
             if (fab != null) {
                 fab.setImageResource(android.R.drawable.btn_star_big_on);
             }
+            movieCursor.close();
             return true;
         }
 
+        movieCursor.close();
         return false;
     }
 
@@ -424,7 +427,12 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    favoriteAction(data.getInt(COL_MOVIE_ID));
+                    try {
+                        // TODO: 2016/12/05 correct issue here with staleDataException
+                        favoriteAction(data.getInt(COL_MOVIE_ID));
+                        fab.setVisibility(View.GONE);
+                    } catch (StaleDataException e) {
+                    }
                 }
             });
 
