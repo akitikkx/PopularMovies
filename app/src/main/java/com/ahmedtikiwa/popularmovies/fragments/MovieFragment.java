@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
+
 public class MovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = MovieFragment.class.getSimpleName();
@@ -222,19 +224,23 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
-        favoriteListAdapter = new FavoriteListAdapter(getActivity(), null, 0);
         movieListAdapter = new MovieListAdapter(getActivity(), 0, movieArrayList);
+        favoriteListAdapter = new FavoriteListAdapter(getActivity(), null, 0);
 
         if (Utility.userPrefersFavoriteMovies(getActivity())) {
             mGridView.setAdapter(favoriteListAdapter);
             mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                    if (cursor != null) {
-                        ((Callback) getActivity()).onFavoriteItemSelected(MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
+                    try {
+                        Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                        if (cursor != null) {
+                            ((Callback) getActivity()).onFavoriteItemSelected(MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
+                        }
+                        mPosition = position;
+                    } catch (ClassCastException e) {
+                        Log.d(TAG, String.valueOf(e.getMessage()));
                     }
-                    mPosition = position;
                 }
             });
         } else {
@@ -242,14 +248,19 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Movie selectedMovie = (Movie) adapterView.getItemAtPosition(position);
-                    if (selectedMovie != null) {
-                        Bundle args = new Bundle();
-                        args.putParcelable(getString(R.string.movies_parcel), selectedMovie);
+                    try {
+                        Movie selectedMovie = (Movie) adapterView.getItemAtPosition(position);
+                        if (selectedMovie != null) {
+                            Bundle args = new Bundle();
+                            args.putParcelable(getString(R.string.movies_parcel), selectedMovie);
 
-                        ((Callback) getActivity()).onItemSelected(args);
+                            ((Callback) getActivity()).onItemSelected(args);
+                        }
+                        mPosition = position;
+
+                    } catch (ClassCastException e) {
+                        Log.d(TAG, String.valueOf(e.getMessage()));
                     }
-                    mPosition = position;
                 }
             });
             loadMovies();

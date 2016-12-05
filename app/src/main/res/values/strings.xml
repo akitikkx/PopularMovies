@@ -35,6 +35,8 @@
     <string name="no_movies_to_display">Once the movies are available they will be displayed here</string>
     <string name="no_reviews_to_display">Once the reviews are available they will be displayed here</string>
     <string name="no_trailers_to_display">Once the trailers are available they will be displayed here</string>
+    <string name="removed_favorite_movie_success">You have successfully removed this movie</string>
+    <string name="add_favorite_movie_success">You have successfully added this movie</string>
 
     <string name="content_authority">com.ahmedtikiwa.popularmovies</string>
     <string name="sync_account_type">com.ahmedtikiwa.popularmovies</string>

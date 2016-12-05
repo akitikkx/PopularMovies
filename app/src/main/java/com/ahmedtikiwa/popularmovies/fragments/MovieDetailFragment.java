@@ -1,8 +1,6 @@
 package com.ahmedtikiwa.popularmovies.fragments;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ahmedtikiwa.popularmovies.BuildConfig;
 import com.ahmedtikiwa.popularmovies.R;
@@ -57,6 +56,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
     private static final int MOVIE_LOADER = 0;
     public static final String MOVIE_DETAIL_URI = "URI";
     private Movie movie;
+    private int selectedMovieId;
     private FloatingActionButton fab;
     private MovieReviewAdapter movieReviewAdapter;
     private MovieTrailerAdapter movieTrailerAdapter;
@@ -125,10 +125,8 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
             if (Utility.userPrefersFavoriteMovies(getActivity())) {
                 mUri = args.getParcelable(MovieDetailFragment.MOVIE_DETAIL_URI);
             } else {
-                Intent intent = getActivity().getIntent();
                 movie = args.getParcelable(getString(R.string.movies_parcel));
             }
-
         }
 
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
@@ -149,30 +147,79 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
         trailerList.setAdapter(movieTrailerAdapter);
 
         if (movie != null && !Utility.userPrefersFavoriteMovies(getActivity())) {
+            selectedMovieId = movie.getId();
             getActivity().setTitle(movie.getTitle());
             loadDetail();
+            isMovieFavorited(movie.getId());
 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ContentValues movieData = new ContentValues();
-                    movieData.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH, movie.getBackdropPath());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
-                    movieData.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
-
-                    Uri insertedUri = getContext().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, movieData);
-
-                    movieId = ContentUris.parseId(insertedUri);
-
+                    favoriteAction(movie.getId());
                 }
             });
         }
 
         return rootView;
+    }
+
+    /**
+     * Checks the database whether the movie has been added to the favorites list
+     * @param movieId
+     * @return
+     */
+    private boolean isMovieFavorited(int movieId) {
+        Cursor movieCursor = getContext().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{Integer.toString(movieId)},
+                null
+        );
+
+        // if the movie is a favorite also set the star to on
+        if (movieCursor.moveToNext()) {
+            if (fab != null) {
+                fab.setImageResource(android.R.drawable.btn_star_big_on);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Triggers the addition or removal of a movie from the favorites database
+     *
+     * @param movieId
+     */
+    private void favoriteAction(int movieId) {
+        if (isMovieFavorited(movieId)) {
+            // movie exists and needs to be de-selected as a favorite
+            getContext().getContentResolver().delete(
+                    MovieContract.MovieEntry.CONTENT_URI,
+                    MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
+                    new String[]{Integer.toString(movieId)}
+            );
+            fab.setImageResource(android.R.drawable.btn_star_big_off);
+            Toast.makeText(getActivity(), getString(R.string.removed_favorite_movie_success), Toast.LENGTH_LONG).show();
+        } else {
+            if (movie != null) {
+                ContentValues movieData = new ContentValues();
+                movieData.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+                movieData.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+                movieData.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
+                movieData.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH, movie.getBackdropPath());
+                movieData.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+                movieData.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
+                movieData.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+
+                Uri insertedUri = getContext().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, movieData);
+
+                fab.setImageResource(android.R.drawable.btn_star_big_on);
+                Toast.makeText(getActivity(), getString(R.string.add_favorite_movie_success), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void loadDetail() {
@@ -283,8 +330,8 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
         trailerProgress = (ProgressBar) rootView.findViewById(R.id.trailers_progress);
         reviewList = (ListView) rootView.findViewById(R.id.movie_reviews_list);
         trailerList = (RecyclerView) rootView.findViewById(R.id.movie_trailers_list);
-        emptyReviewStateLayer = (LinearLayout)rootView.findViewById(R.id.empty_reviews_state_layer);
-        emptyTrailerStateLayer = (LinearLayout)rootView.findViewById(R.id.empty_trailers_state_layer);
+        emptyReviewStateLayer = (LinearLayout) rootView.findViewById(R.id.empty_reviews_state_layer);
+        emptyTrailerStateLayer = (LinearLayout) rootView.findViewById(R.id.empty_trailers_state_layer);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
     }
@@ -323,9 +370,12 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
         if (data != null && data.moveToNext()) {
             fab.setImageResource(android.R.drawable.btn_star_big_on);
+            selectedMovieId = data.getInt(COL_MOVIE_ID);
+
+            loadMovieTrailers(data.getInt(COL_MOVIE_ID));
 
             getActivity().setTitle(data.getString(COLUMN_TITLE));
             // setup the backdrop
@@ -349,6 +399,8 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
 
             // setup the plot synopsis
             plotSynopsis.setText(data.getString(COLUMN_OVERVIEW));
+            releaseDate.setText(data.getString(COLUMN_RELEASE_DATE));
+            voteAverage.setText(data.getString(COLUMN_VOTE_AVERAGE));
 
             // setup the movie poster
             Glide.with(getContext())
@@ -368,6 +420,13 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
                     .into(moviePoster);
 
             loadMovieReviews(data.getInt(COL_MOVIE_ID));
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    favoriteAction(data.getInt(COL_MOVIE_ID));
+                }
+            });
 
         }
 

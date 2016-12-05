@@ -83,6 +83,7 @@
                         android:id="@+id/movie_poster"
                         android:layout_width="@dimen/detail_poster_width"
                         android:layout_height="wrap_content"
+                        android:minHeight="@dimen/detail_poster_height"
                         android:padding="@dimen/content_padding" />
 
                 </LinearLayout>
@@ -138,9 +139,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
+                android:layout_height="wrap_content"
+                android:padding="@dimen/content_padding">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/movie_trailers_list"
