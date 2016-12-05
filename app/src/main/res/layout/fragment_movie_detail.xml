@@ -129,32 +129,40 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/content_padding"
-                android:orientation="vertical">
+                android:text="@string/movie_trailers_heading"
+                android:textAppearance="?android:textAppearanceLarge" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/content_padding"
-                    android:text="@string/movie_trailers_heading"
-                    android:textAppearance="?android:textAppearanceLarge" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:id="@+id/trailers_progress"
-                    style="?android:attr/progressBarStyleSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/movie_trailers_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/content_padding"
-                    android:visibility="gone" />
+                    android:padding="@dimen/content_padding" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/content_padding"
+                android:orientation="vertical">
+
+
+
+                <ProgressBar
+                    android:id="@+id/trailers_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
                     android:id="@+id/empty_trailers_state_layer"
@@ -172,6 +180,8 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

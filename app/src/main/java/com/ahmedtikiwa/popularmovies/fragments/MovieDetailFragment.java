@@ -11,6 +11,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +67,10 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
     private TextView plotSynopsis, releaseDate, voteAverage;
     private ProgressBar backdropProgress, posterProgress, reviewProgress, trailerProgress;
     private LinearLayout emptyReviewStateLayer, emptyTrailerStateLayer;
-    private ListView reviewList, trailerList;
+    private ListView reviewList;
+    private RecyclerView trailerList;
     private ArrayList<MovieReview> movieReviewsList;
-    private ArrayList<MovieTrailer> movieTrailerList;
+    private ArrayList<MovieTrailer> movieTrailerList = new ArrayList<MovieTrailer>();
 
     private static final String[] MOVIE_COLUMNS = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
@@ -133,8 +137,15 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
         movieReviewAdapter = new MovieReviewAdapter(getActivity(), 0, movieReviewsList);
         reviewList.setAdapter(movieReviewAdapter);
 
-        movieTrailerList = new ArrayList<MovieTrailer>();
-        movieTrailerAdapter = new MovieTrailerAdapter(getActivity(), 0, movieTrailerList);
+        movieTrailerAdapter = new MovieTrailerAdapter(getActivity(), movieTrailerList);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        trailerList.setNestedScrollingEnabled(false);
+        trailerList.setItemAnimator(new DefaultItemAnimator());
+        trailerList.setHasFixedSize(true);
+        trailerList.setLayoutManager(layoutManager);
         trailerList.setAdapter(movieTrailerAdapter);
 
         if (movie != null && !Utility.userPrefersFavoriteMovies(getActivity())) {
@@ -271,7 +282,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
         reviewProgress = (ProgressBar) rootView.findViewById(R.id.reviews_progress);
         trailerProgress = (ProgressBar) rootView.findViewById(R.id.trailers_progress);
         reviewList = (ListView) rootView.findViewById(R.id.movie_reviews_list);
-        trailerList = (ListView) rootView.findViewById(R.id.movie_trailers_list);
+        trailerList = (RecyclerView) rootView.findViewById(R.id.movie_trailers_list);
         emptyReviewStateLayer = (LinearLayout)rootView.findViewById(R.id.empty_reviews_state_layer);
         emptyTrailerStateLayer = (LinearLayout)rootView.findViewById(R.id.empty_trailers_state_layer);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);

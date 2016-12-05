@@ -9,5 +9,11 @@
         android:id="@+id/trailer_item"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/share_trailer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_share_black_24dp" />
 </LinearLayout>
