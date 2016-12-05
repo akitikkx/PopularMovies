@@ -126,7 +126,7 @@ public class MovieDetailFragment extends android.support.v4.app.Fragment impleme
                 mUri = args.getParcelable(MovieDetailFragment.MOVIE_DETAIL_URI);
             } else {
                 Intent intent = getActivity().getIntent();
-                movie = intent.getExtras().getParcelable(getString(R.string.movies_parcel));
+                movie = args.getParcelable(getString(R.string.movies_parcel));
             }
 
         }

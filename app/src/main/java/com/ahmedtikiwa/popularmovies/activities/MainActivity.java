@@ -114,11 +114,8 @@ public class MainActivity extends BaseActivity implements MovieFragment.Callback
     @Override
     public void onItemSelected(Bundle bundle) {
         if (mTwoPane) {
-            Bundle args = new Bundle();
-            args.putParcelable(getString(R.string.movies_parcel), bundle);
-
             MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
-            movieDetailFragment.setArguments(args);
+            movieDetailFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, movieDetailFragment, MOVIE_DETAIL_FRAGMENT_TAG)
