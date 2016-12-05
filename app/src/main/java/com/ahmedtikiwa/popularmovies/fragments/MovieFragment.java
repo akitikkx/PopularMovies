@@ -11,7 +11,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +33,6 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
-
-import static android.content.ContentValues.TAG;
 
 public class MovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -176,7 +173,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
                 } else {
                     progressBar.setVisibility(ProgressBar.GONE);
                     emptyStateLayer.setVisibility(View.VISIBLE);
-                    Log.d(LOG_TAG, "Response was not successful: " + String.valueOf(response.errorBody()));
                 }
 
                 if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
@@ -188,7 +184,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progressBar.setVisibility(ProgressBar.GONE);
                 emptyStateLayer.setVisibility(View.VISIBLE);
-                Log.d(LOG_TAG, String.valueOf(t.getMessage()));
 
                 if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
@@ -239,7 +234,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
                         }
                         mPosition = position;
                     } catch (ClassCastException e) {
-                        Log.d(TAG, String.valueOf(e.getMessage()));
                     }
                 }
             });
@@ -259,7 +253,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
                         mPosition = position;
 
                     } catch (ClassCastException e) {
-                        Log.d(TAG, String.valueOf(e.getMessage()));
                     }
                 }
             });
