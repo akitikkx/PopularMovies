@@ -1,6 +1,8 @@
 package com.ahmedtikiwa.popularmovies.api;
 
 import com.ahmedtikiwa.popularmovies.App;
+import com.ahmedtikiwa.popularmovies.models.MovieReviewResponse;
+import com.ahmedtikiwa.popularmovies.models.MovieTrailersResponse;
 import com.ahmedtikiwa.popularmovies.models.MoviesResponse;
 
 import java.io.File;
@@ -16,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -77,6 +80,12 @@ public class TmdbApi {
 
         @GET("movie/top_rated/")
         Call<MoviesResponse> topRatedMovies(@Query("api_key") String apiKey);
+
+        @GET("movie/{movie_id}/reviews")
+        Call<MovieReviewResponse> reviews(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+        @GET("movie/{movie_id}/videos")
+        Call<MovieTrailersResponse> videos(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
     }
 
 }

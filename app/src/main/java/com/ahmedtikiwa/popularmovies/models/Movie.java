@@ -28,6 +28,7 @@ public class Movie implements Parcelable {
     private String vote_average;
 
     protected Movie(Parcel in) {
+        id = in.readInt();
         poster_path = in.readString();
         overview = in.readString();
         release_date = in.readString();
@@ -253,6 +254,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeString(poster_path);
         parcel.writeString(overview);
         parcel.writeString(release_date);

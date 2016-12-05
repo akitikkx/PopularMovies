@@ -1,6 +1,7 @@
 package com.ahmedtikiwa.popularmovies.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
@@ -9,16 +10,34 @@ import android.view.MenuItem;
 
 import com.ahmedtikiwa.popularmovies.App;
 import com.ahmedtikiwa.popularmovies.R;
+import com.ahmedtikiwa.popularmovies.fragments.MovieDetailFragment;
+import com.ahmedtikiwa.popularmovies.fragments.MovieFragment;
+import com.ahmedtikiwa.popularmovies.utils.Utility;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MovieFragment.Callback {
 
+    private static final String MOVIE_DETAIL_FRAGMENT_TAG = "MovieDetailFragment";
     private CoordinatorLayout coordinatorLayout;
     private App app;
+    private String mSortOrder;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.movie_detail_container) != null) {
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new MovieDetailFragment(), MOVIE_DETAIL_FRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
 
         app = (App) getApplication();
 
@@ -35,6 +54,19 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         checkNetworkConnection(coordinatorLayout);
+        String sortOrderPref = Utility.getPreferredSortOrder(this);
+        if (sortOrderPref != null && !sortOrderPref.equals(mSortOrder)) {
+            MovieFragment movieFragment = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.movie_container);
+            if (null != movieFragment) {
+                movieFragment.onSortOrderPrefChange();
+            }
+
+            MovieDetailFragment movieDetailFragment = (MovieDetailFragment) getSupportFragmentManager().findFragmentByTag(MOVIE_DETAIL_FRAGMENT_TAG);
+            if (null != movieDetailFragment) {
+                movieDetailFragment.onSortOrderPrefChange();
+            }
+            mSortOrder = sortOrderPref;
+        }
     }
 
     @Override
@@ -58,5 +90,39 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFavoriteItemSelected(Uri movieUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailFragment.MOVIE_DETAIL_URI, movieUri);
+
+            MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+            movieDetailFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, movieDetailFragment, MOVIE_DETAIL_FRAGMENT_TAG)
+                    .commit();
+
+        } else {
+            Intent movieDetail = new Intent(this, MovieDetailActivity.class).setData(movieUri);
+            startActivity(movieDetail);
+        }
+    }
+
+    @Override
+    public void onItemSelected(Bundle bundle) {
+        if (mTwoPane) {
+            MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+            movieDetailFragment.setArguments(bundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, movieDetailFragment, MOVIE_DETAIL_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent movieDetail = new Intent(this, MovieDetailActivity.class).putExtras(bundle);
+            startActivity(movieDetail);
+        }
     }
 }
